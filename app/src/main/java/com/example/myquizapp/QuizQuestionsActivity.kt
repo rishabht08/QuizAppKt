@@ -29,9 +29,14 @@ class QuizQuestionsActivity : AppCompatActivity() , View.OnClickListener {
     private var tvOptionFour:TextView? = null
     private var btnSubmit: Button? = null
 
+    private var score: Int = 0
+    private var userName: String = "User"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_questions)
+
+        userName = intent.getStringExtra(Constants.USER_NAME).toString()
 
         progressBar=findViewById(R.id.progressBar)
         tvProgress = findViewById(R.id.tvProgress)
@@ -153,12 +158,18 @@ class QuizQuestionsActivity : AppCompatActivity() , View.OnClickListener {
                         }
                         else -> {
                             val intent = Intent(this, FinishScreenActivity::class.java)
+                            intent.putExtra(Constants.CORRECT_ANSWERS,score)
+                            intent.putExtra(Constants.USER_NAME,userName)
+                            intent.putExtra(Constants.TOTAL_QUESTIONS,10)
                             startActivity(intent)
                             finish()
                         }
                     }
                 }else{
                     val question = mQuestionsList?.get(mCurrentPosition-1)
+                    if(question!!.correctAnswer == mSelectedOptionPosition){
+                        score++
+                    }
                     if(question!!.correctAnswer != mSelectedOptionPosition) {
                         answerView(mSelectedOptionPosition , R.drawable.wrong_option_border_bg)
                     }
